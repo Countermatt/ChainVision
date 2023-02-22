@@ -3,44 +3,55 @@
 import csv
 import os
 import multiprocessing
-from threading import Thread
-import threading
-import time
 
-def qsort(sets,left,right):
+from random import randint
+def quicksort(array):
 
-    #print("thead {0} is sorting {1}".format(threading.current_thread(), sets[left:right]))
+    # If the input array contains fewer than two elements,
 
-    i = left
-    j = right
-    pivot = sets[int((left + right)/2)]
-    temp = 0
-    while(i <= j):
-         while(pivot > sets[i]):
-             i = i+1
-         while(pivot < sets[j]):
-             j = j-1
-         if(i <= j):
-             temp = sets[i]     
-             sets[i] = sets[j]
-             sets[j] = temp
-             i = i + 1
-             j = j - 1
+    # then return it as the result of the function
 
-    lthread = None
-    rthread = None
+    if len(array) < 2:
 
-    if (left < j):
-        lthread = Thread(target = lambda: qsort(sets,left,j))
-        lthread.start()
+        return array
 
-    if (i < right):
-        rthread = Thread(target=lambda: qsort(sets,i,right))
-        rthread.start()
 
-    if lthread is not None: lthread.join()
-    if rthread is not None: rthread.join()
-    return sets
+    low, same, high = [], [], []
+
+
+    # Select your `pivot` element randomly
+
+    pivot = array[randint(0, len(array) - 1)]
+
+
+    for item in array:
+
+        # Elements that are smaller than the `pivot` go to
+
+        # the `low` list. Elements that are larger than
+
+        # `pivot` go to the `high` list. Elements that are
+
+        # equal to `pivot` go to the `same` list.
+
+        if item < pivot:
+
+            low.append(item)
+
+        elif item == pivot:
+
+            same.append(item)
+
+        elif item > pivot:
+
+            high.append(item)
+
+
+    # The final result combines the sorted `low` list
+
+    # with the `same` list and the sorted `high` list
+
+    return quicksort(low) + same + quicksort(high)
 
 
 #Sort entry directory
@@ -145,12 +156,12 @@ if __name__ == '__main__':
         for x in list(result):
             accounts += x
 
-        accounts = qsort(accounts,0,len(accounts) - 1)
+        accounts = quicksort(accounts)
         csv_list = []
         for x in range(1, len(accounts)):
             if accounts[x-1] != accounts[x]:
                 csv_list.append(accounts[x])
-
+        print(csv_list)
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_file, 'a') as output_file:
             fieldnames = ['account']
