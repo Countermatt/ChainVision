@@ -3,6 +3,45 @@
 import csv
 import os
 import multiprocessing
+from threading import Thread
+import threading
+import time
+
+def qsort(sets,left,right):
+
+    #print("thead {0} is sorting {1}".format(threading.current_thread(), sets[left:right]))
+
+    i = left
+    j = right
+    pivot = sets[int((left + right)/2)]
+    temp = 0
+    while(i <= j):
+         while(pivot > sets[i]):
+             i = i+1
+         while(pivot < sets[j]):
+             j = j-1
+         if(i <= j):
+             temp = sets[i]     
+             sets[i] = sets[j]
+             sets[j] = temp
+             i = i + 1
+             j = j - 1
+
+    lthread = None
+    rthread = None
+
+    if (left < j):
+        lthread = Thread(target = lambda: qsort(sets,left,j))
+        lthread.start()
+
+    if (i < right):
+        rthread = Thread(target=lambda: qsort(sets,i,right))
+        rthread.start()
+
+    if lthread is not None: lthread.join()
+    if rthread is not None: rthread.join()
+    return sets
+
 
 #Sort entry directory
 def sort_directory(list_file):
@@ -102,22 +141,22 @@ if __name__ == '__main__':
             results = pool.starmap(get_data, zip(data_list))
         result = list(results)
         print("===Remove Duplicate:", index+1, "/", len(dir_list),"===")
-        index_list = [i for i in range(len(result))]
-        input_tuple = [[result, i] for i in range(len(result))]
-        #with multiprocessing.Pool(processes=8) as pool:
-        #    results = pool.starmap(remove_duplicate, input_tuple)
-        
         accounts = []
         for x in list(result):
             accounts += x
 
-            csv_list =[]
+        accounts = qsort(accounts,0,len(accounts) - 1)
+        csv_list = []
+        for x in range(1, len(accounts)):
+            if accounts[x-1] != accounts[x]:
+                csv_list.append(accounts[x])
+
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_file, 'a') as output_file:
             fieldnames = ['account']
             dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
             dict_writer.writeheader()
-            for account in accounts:
+            for account in csv_list:
                 record = {}
                 record['account'] = account
                 dict_writer.writerow(record)
