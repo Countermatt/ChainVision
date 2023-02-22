@@ -161,7 +161,6 @@ if __name__ == '__main__':
         for x in range(1, len(accounts)):
             if accounts[x-1] != accounts[x]:
                 csv_list.append(accounts[x])
-        print(csv_list)
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_file, 'a') as output_file:
             fieldnames = ['account']
