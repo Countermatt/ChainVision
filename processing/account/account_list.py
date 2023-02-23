@@ -50,21 +50,8 @@ def read_csv(file):
 def get_data(data):
     result = []
     for x in data:
-        if not x[2] in result:
-            result.append(x[2])
-        if not x[3] in result:
-            result.append(x[3])
-    return result
-
-def remove_duplicate(data, index):
-
-    result = []
-    for i in range(index):
-        for y in data[index]:
-            if not y in data[i]:
-                result.append(y)
-        data[index] = result
-        print(i)
+        result.append(x[2])
+        result.append(x[3])
     return result
 
 if __name__ == '__main__':
