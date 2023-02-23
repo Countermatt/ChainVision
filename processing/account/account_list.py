@@ -148,25 +148,15 @@ if __name__ == '__main__':
             k += 1
         print(len(data_list[0]))
         #with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
-        with multiprocessing.Pool(processes=4) as pool:
+        with multiprocessing.Pool(processes=11) as pool:
             results = pool.starmap(get_data, zip(data_list))
         result = list(results)
-        print("===Remove Duplicate:", index+1, "/", len(dir_list),"===")
-        accounts = []
-        for x in list(result):
-            accounts += x
-
-        accounts = quicksort(accounts)
-        csv_list = []
-        for x in range(1, len(accounts)):
-            if accounts[x-1] != accounts[x]:
-                csv_list.append(accounts[x])
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_file, 'a') as output_file:
             fieldnames = ['account']
             dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
             dict_writer.writeheader()
-            for account in csv_list:
+            for account in result:
                 record = {}
                 record['account'] = account
                 dict_writer.writerow(record)
