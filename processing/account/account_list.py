@@ -112,4 +112,4 @@ if __name__ == '__main__':
                     record['account'] = account
                     dict_writer.writerow(record)
             print(file, " Done")
-            index +=1
+        index +=1
