@@ -57,7 +57,6 @@ def get_data(data):
 if __name__ == '__main__':
     
     nb_cores = multiprocessing.cpu_count()
-    nb_cores = 4
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     transaction_path = dir_path + "/../../data/raw_data/transaction"
@@ -66,37 +65,33 @@ if __name__ == '__main__':
     dir_list = os.listdir(transaction_path)
     dir_list = sort_directory(dir_list)
 
-
     multiprocessing.freeze_support() # for Windows, also requires to be in the statement: if __name__ == '__main__'
-    begin = 483
     index = 0
     for file in dir_list:
-        if index > begin:
-            print(file, " Progress")
-            print("===Create account list:", index+1, "/", len(dir_list),"===")
-            
-            file = transaction_path + "/" + file
-            data = read_csv(file)
-            data_list = [[] for _ in range(nb_cores)]
-            k = 0
-            for x in data:
-                if k == nb_cores:
-                    k = 0
-                data_list[k].append(x)
-                k += 1
-            print(len(data_list[0]))
-            #with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
-            with multiprocessing.Pool(processes=11) as pool:
-                results = pool.starmap(get_data, zip(data_list))
-            result = set(results)
-            print("===wrtie csv:", index+1, "/", len(dir_list),"===")
-            with open(save_directory + file, 'a') as output_file:
-                fieldnames = ['account']
-                dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
-                dict_writer.writeheader()
-                for account in result:
-                    record = {}
-                    record['account'] = account
-                    dict_writer.writerow(record)
-            print(file, " Done")
+        print(file, " Progress")
+        print("===Create account list:", index+1, "/", len(dir_list),"===")
+        
+        file = transaction_path + "/" + file
+        data = read_csv(file)
+        data_list = [[] for _ in range(nb_cores)]
+        k = 0
+        for x in data:
+            if k == nb_cores:
+                k = 0
+            data_list[k].append(x)
+            k += 1
+        print(len(data_list[0]))
+        with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
+            results = pool.starmap(get_data, zip(data_list))
+        result = set(results)
+        print("===wrtie csv:", index+1, "/", len(dir_list),"===")
+        with open(save_directory + file, 'a') as output_file:
+            fieldnames = ['account']
+            dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+            dict_writer.writeheader()
+            for account in result:
+                record = {}
+                record['account'] = account
+                dict_writer.writerow(record)
+        print(file, " Done")
         index +=1
