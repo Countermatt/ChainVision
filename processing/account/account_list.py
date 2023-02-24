@@ -83,10 +83,9 @@ if __name__ == '__main__':
         print(len(data_list[0]))
         with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
             results = pool.starmap(get_data, zip(data_list))
-        result = list((results))
         account_set = set(())
-        for x in result:
-            account_set.add(x)
+        for x in results:
+            account_set.update(x)
 
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_directory + file, 'a') as output_file:
