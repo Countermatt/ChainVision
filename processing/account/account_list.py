@@ -48,7 +48,7 @@ def read_csv(file):
     return data
 
 def get_data(data):
-    result = (())
+    result = set(())
     for x in data:
         result.add(x[2])
         result.add(x[3])
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     save_directory = dir_path + "/../../data/processed_data/account/"
 
     dir_list = os.listdir(transaction_path)
-    dir_list = sort_directory(dir_list)
+    dir_list = sort_directory(dir_list) 
 
     multiprocessing.freeze_support() # for Windows, also requires to be in the statement: if __name__ == '__main__'
     index = 0
