@@ -90,8 +90,6 @@ if __name__ == '__main__':
                     dict_writer.writerow(record)
             transaction_list = []
             save_index += 1
-        print(index)
-        print(len(pending_data))
         transaction_list.append(set_transaction(pending_data[index], transaction_id))
         transaction_id +=1
         index +=1
