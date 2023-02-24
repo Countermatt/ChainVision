@@ -48,10 +48,10 @@ def read_csv(file):
     return data
 
 def get_data(data):
-    result = []
+    result = (())
     for x in data:
-        result.append(x[2])
-        result.append(x[3])
+        result.add(x[2])
+        result.add(x[3])
     return result
 
 if __name__ == '__main__':
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     transaction_path = dir_path + "/../../data/raw_data/transaction"
-    save_file = dir_path + "/../../data/processed_data/account/account_list.csv"
+    save_directory = dir_path + "/../../data/processed_data/account/"
 
     dir_list = os.listdir(transaction_path)
     dir_list = sort_directory(dir_list)
@@ -88,9 +88,9 @@ if __name__ == '__main__':
             #with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
             with multiprocessing.Pool(processes=11) as pool:
                 results = pool.starmap(get_data, zip(data_list))
-            result = list(results)
+            result = set(results)
             print("===wrtie csv:", index+1, "/", len(dir_list),"===")
-            with open(save_file, 'a') as output_file:
+            with open(save_directory + file, 'a') as output_file:
                 fieldnames = ['account']
                 dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
                 dict_writer.writeheader()
