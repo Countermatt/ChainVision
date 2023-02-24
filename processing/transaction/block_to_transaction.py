@@ -68,13 +68,14 @@ if __name__ == '__main__':
     transaction_id = 0
     transaction_list = []
     while(dir_index < len(dir_list) or index < len(pending_data)):
-        if(len(pending_data) < 10000 and dir_index < len(dir_list)):
+        if(len(pending_data) - index < 10000 and dir_index < len(dir_list)):
             print("=== File Number:", dir_index+1, "/", len(dir_list),"===")
-            pending_data = pending_data[index:] + read_csv(transaction_path + "/" + dir_list[dir_index])
+            tmp = pending_data[index:] + read_csv(transaction_path + "/" + dir_list[dir_index])
+            pending_data = tmp
             index = 0
             dir_index += 1
         if(len(transaction_list) == 10000):
-            with open(save_directory + str(save_index) + ".csv", 'a') as output_file:
+            with open(save_directory + str(save_index) + ".csv", 'w') as output_file:
                 fieldnames = ["transaction_index", "From","To","Value","Gas","Gas_price"]
                 dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
                 dict_writer.writeheader()
@@ -88,6 +89,9 @@ if __name__ == '__main__':
                     record['Gas_price'] = account[5]
                     dict_writer.writerow(record)
             transaction_list = []
+            save_index += 1
+        print(index)
+        print(len(pending_data))
         transaction_list.append(set_transaction(pending_data[index], transaction_id))
         transaction_id +=1
         index +=1
