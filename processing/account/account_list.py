@@ -70,7 +70,7 @@ if __name__ == '__main__':
     for file in dir_list:
         print(file, " Progress")
         print("===Create account list:", index+1, "/", len(dir_list),"===")
-        
+        file_tmp = file
         file = transaction_path + "/" + file
         data = read_csv(file)
         data_list = [[] for _ in range(nb_cores)]
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             account_set.update(x)
 
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
-        with open(save_directory + file, 'a') as output_file:
+        with open(save_directory + file_tmp, 'a') as output_file:
             fieldnames = ['account']
             dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
             dict_writer.writeheader()
