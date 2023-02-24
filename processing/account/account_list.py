@@ -83,13 +83,14 @@ if __name__ == '__main__':
         print(len(data_list[0]))
         with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
             results = pool.starmap(get_data, zip(data_list))
-        result = set((results))
+        result = list((results))
+        account_set = set((result))
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_directory + file, 'a') as output_file:
             fieldnames = ['account']
             dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
             dict_writer.writeheader()
-            for account in result:
+            for account in account_set:
                 record = {}
                 record['account'] = account
                 dict_writer.writerow(record)
