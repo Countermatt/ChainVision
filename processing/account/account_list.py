@@ -84,7 +84,9 @@ if __name__ == '__main__':
         with multiprocessing.Pool(processes=nb_cores) as pool: # auto closing workers
             results = pool.starmap(get_data, zip(data_list))
         result = list((results))
-        account_set = set((result))
+        account_set = set(())
+        account_set.update(result)
+
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_directory + file, 'a') as output_file:
             fieldnames = ['account']
