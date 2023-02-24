@@ -55,8 +55,7 @@ if __name__ == '__main__':
     
     dir_path = os.path.dirname(os.path.realpath(__file__))
     transaction_path = dir_path + "/../../data/raw_data/transaction"
-    account_file = dir_path + "/../../data/processed_data/account/account_list.csv"
-    save_directory = dir_path + "/../../data/raw_data/transaction/transaction_order/"
+    save_directory = dir_path + "/../../data/raw_data/transaction_order/"
     dir_list = os.listdir(transaction_path)
     dir_list = sort_directory(dir_list)
 
@@ -68,13 +67,13 @@ if __name__ == '__main__':
     save_index = 0
     transaction_id = 0
     transaction_list = []
-    while(dir_index < len(dir_list) and index < len(pending_data)):
-        if(len(pending_data) < 100000 and dir_index < len(dir_list)):
+    while(dir_index < len(dir_list) or index < len(pending_data)):
+        if(len(pending_data) < 10000 and dir_index < len(dir_list)):
             print("=== File Number:", dir_index+1, "/", len(dir_list),"===")
             pending_data = pending_data[index:] + read_csv(transaction_path + "/" + dir_list[dir_index])
             index = 0
             dir_index += 1
-        if(len(transaction_list) == 100000):
+        if(len(transaction_list) == 10000):
             with open(save_directory + str(save_index) + ".csv", 'a') as output_file:
                 fieldnames = ["transaction_index", "From","To","Value","Gas","Gas_price"]
                 dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
