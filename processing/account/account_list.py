@@ -85,7 +85,8 @@ if __name__ == '__main__':
             results = pool.starmap(get_data, zip(data_list))
         result = list((results))
         account_set = set(())
-        account_set.update(result)
+        for x in result:
+            account_set.add(x)
 
         print("===wrtie csv:", index+1, "/", len(dir_list),"===")
         with open(save_directory + file, 'a') as output_file:
