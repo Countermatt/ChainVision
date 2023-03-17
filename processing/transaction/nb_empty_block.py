@@ -41,7 +41,7 @@ def main():
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     data_path = dir_path + "/../../data/raw_data/block"
-    save_file = dir_path + "/figure_data/data.csv"
+    save_file = dir_path + "/../../figure/figure_data/nb_empty_block.csv"
 
     dir_list = os.listdir(data_path)
     dir_list = sort_directory(dir_list)

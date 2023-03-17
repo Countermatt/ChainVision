@@ -58,7 +58,7 @@ if __name__ == '__main__':
     save_directory = dir_path + "/../../data/raw_data/transaction_order/"
     dir_list = os.listdir(transaction_path)
     dir_list = sort_directory(dir_list)
-
+    len_file = 1000000
 
     multiprocessing.freeze_support() # for Windows, also requires to be in the statement: if __name__ == '__main__'
     index = 0
@@ -68,13 +68,13 @@ if __name__ == '__main__':
     transaction_id = 0
     transaction_list = []
     while(dir_index < len(dir_list) or index < len(pending_data)):
-        if(len(pending_data) - index < 10000 and dir_index < len(dir_list)):
+        if(len(pending_data) - index < len_file and dir_index < len(dir_list)):
             print("=== File Number:", dir_index+1, "/", len(dir_list),"===")
             tmp = pending_data[index:] + read_csv(transaction_path + "/" + dir_list[dir_index])
             pending_data = tmp
             index = 0
             dir_index += 1
-        if(len(transaction_list) == 10000):
+        if(len(transaction_list) == len_file):
             with open(save_directory + str(save_index) + ".csv", 'w') as output_file:
                 fieldnames = ["transaction_index", "From","To","Value","Gas","Gas_price"]
                 dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
@@ -93,3 +93,17 @@ if __name__ == '__main__':
         transaction_list.append(set_transaction(pending_data[index], transaction_id))
         transaction_id +=1
         index +=1
+
+    with open(save_directory + str(save_index+1) + ".csv", 'w') as output_file:
+        fieldnames = ["transaction_index", "From","To","Value","Gas","Gas_price"]
+        dict_writer = csv.DictWriter(output_file, fieldnames=fieldnames)
+        dict_writer.writeheader()
+        for account in transaction_list:
+            record = {}
+            record['transaction_index'] = account[0]
+            record['From'] = account[1]
+            record['To'] = account[2]
+            record['Value'] = account[3]
+            record['Gas'] = account[4]
+            record['Gas_price'] = account[5]
+            dict_writer.writerow(record)
